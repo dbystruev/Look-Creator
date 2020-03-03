@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final items = [
+  final List<ItemWidget> items = [
     ItemWidget(
       Item(pictures: [
         'https://a.lmcdn.ru/pi/img600x866/A/M/AM029EBGAMM6_9091095_1_v1.jpg',
