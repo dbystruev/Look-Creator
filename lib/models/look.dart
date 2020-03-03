@@ -11,5 +11,5 @@ class Look {
   final List<Item> items;
   final Layout layout;
 
-  Look({this.items, this.layout});
+  Look({this.items, this.layout = Layout.bottom_right});
 }
