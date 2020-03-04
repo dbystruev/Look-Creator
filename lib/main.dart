@@ -35,52 +35,44 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final Api offersApi = Api();
-  final List<ItemWidget> items = [
-    ItemWidget(
-      Item(pictures: [
-        'https://a.lmcdn.ru/pi/img600x866/A/M/AM029EBGAMM6_9091095_1_v1.jpg',
-      ]),
-    ),
-    ItemWidget(
-      Item(pictures: [
-        'https://a.lmcdn.ru/pi/img600x866/A/N/AN225EGGURF0_9495585_1_v1.jpg',
-      ]),
-    ),
-    ItemWidget(
-      Item(pictures: [
-        'https://a.lmcdn.ru/pi/img600x866/A/T/AT006EBCSCT1_7233399_1_v1.jpg',
-      ]),
-    ),
-    ItemWidget(
-      Item(pictures: [
-        'https://a.lmcdn.ru/pi/img600x866/A/D/AD002BUEEDG3_7997272_1_v1.jpg'
-      ]),
-    ),
-    ItemWidget(
-      Item(pictures: [
-        'https://a.lmcdn.ru/pi/img600x866/A/D/AD002ABFKOD0_8782617_1_v1.jpg'
-      ]),
-      insets: EdgeInsets.only(bottom: 25),
-    ),
+  final List<String> itemIds = [
+    'AM029EBGAMM6',
+    'AN225EGGURF0',
+    'AT006EBCSCT1',
+    'AD002BUEEDG3',
+    'AD002ABFKOD0'
   ];
+  List<Item> items = [];
+  List<ItemWidget> itemWidgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    offersApi
+        .getItems(itemIds)
+        .then(
+          (items) => setState(() {
+            itemWidgets = items
+                .map(
+                  (item) => ItemWidget(item),
+                )
+                .toList();
+          }),
+        )
+        .catchError(
+          (error) => print('ERROR loading items: $error'),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    offersApi
-        .getItem('AR037EWFXUV5')
-        .then(
-          (Item item) => print('DEBUG lib/main.dart line 72: $item'),
-        )
-        .catchError(
-          (error) => print('ERROR lib/main.dart line 75: $error'),
-        );
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       backgroundColor: Color(0xFFF8F8F8),
       body: Center(
-        child: LookWidget(items, layout: Layout.bottom_right),
+        child: LookWidget(itemWidgets, layout: Layout.bottom_right),
       ),
     );
   }

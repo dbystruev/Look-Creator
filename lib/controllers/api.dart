@@ -16,31 +16,46 @@ class Api {
 
   Uri get baseUri => _baseUri;
 
+  String get fragment => _baseUri.fragment;
+
+  String get host => _baseUri.host;
+
+  int get port => _baseUri.port;
+
   String get scheme => _baseUri.scheme;
 
   String get unencodedPath => _baseUri.pathSegments.join('/');
+
+  String get userInfo => _baseUri.userInfo;
 
   Api({Uri uri}) {
     this._baseUri = uri ?? Uri.http('server.getoutfit.ru', 'offers');
   }
 
-  Future<Item> getItem(String id) async {
-    final Map<String, String> query = {'id': id};
-    final Uri queryUri = scheme == 'http'
-        ? Uri.http(authority, unencodedPath, query)
-        : scheme == 'https' ? Uri.https(authority, unencodedPath, query) : null;
-    if (queryUri == null) throw ('Unknown scheme $scheme');
+  Future<Item> getItem(String id) async => (await getItems([id]))?.first;
+
+  Future<List<Item>> getItems(List<String> ids) async {
+    final Map<String, List<String>> queryParameters = {'id': ids};
+    final Uri queryUri = Uri(
+      scheme: scheme,
+      userInfo: userInfo,
+      host: host,
+      port: port,
+      path: unencodedPath,
+      queryParameters: queryParameters,
+      fragment: fragment,
+    );
     final http.Response response = await http.get(queryUri);
     if (response.statusCode == 200) {
-      print(
-          'DEBUG lib/controllers/api.dart line 40: response.body = ${response.body}');
-      return convert
+      final Iterable<Item> unsortedItems = convert
           .jsonDecode(response.body)
           .map(
             (itemJson) => Item.fromJson(itemJson),
           )
-          .toList()
-          .first;
+          .cast<Item>();
+      final Map<String, Item> mappedItems =
+          Map<String, Item>.fromIterable(unsortedItems, key: (item) => item.id);
+      return ids.map((id) => mappedItems[id]).toList();
     } else
       return null;
   }

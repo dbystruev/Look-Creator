@@ -21,22 +21,16 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     if (json == null) throw FormatException('Null JSON provided to Item');
+    final String oldprice = json['oldprice']?.toString();
+    final String price = json['price']?.toString();
     return Item(
       id: json['id'],
       name: json['name'],
-      oldprice: Decimal.parse(
-        json['oldprice'].toString(),
-      ),
-      pictures: json['pictures'].cast<String>(),
-      price: Decimal.parse(
-        json['price'].toString(),
-      ),
+      oldprice: oldprice == null ? null : Decimal.parse(oldprice),
+      pictures: json['pictures']?.cast<String>(),
+      price: price == null ? null : Decimal.parse(price),
       url: json['url'],
     );
-  }
-
-  factory Item.fromId(String id) {
-    return Item(id: id);
   }
 
   @override

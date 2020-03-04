@@ -22,11 +22,15 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final String imageUrl = item.pictures.first;
     assert(imageUrl != null);
-    return Padding(
-      child: kIsWeb
-          ? Image.network(imageUrl)
-          : CachedNetworkImage(imageUrl: imageUrl),
-      padding: insets,
+    return GestureDetector(
+      child: Padding(
+        child: kIsWeb
+            ? Image.network(imageUrl)
+            : CachedNetworkImage(imageUrl: imageUrl),
+        padding: insets,
+      ),
+      onTap: () => print(
+          'DEBUG in lib/widgets/item_widget.dart line 33: ${item.id} (${item.name}) tapped'),
     );
   }
 }

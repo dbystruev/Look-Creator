@@ -8,31 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:look_creator/models/layout.dart';
 import 'package:look_creator/widgets/item_widget.dart';
 
-class LookWidget extends StatefulWidget {
-  final List<ItemWidget> items;
+class LookWidget extends StatelessWidget {
+  final List<ItemWidget> itemWidgets;
   final Layout layout;
 
-  LookWidget(this.items, {this.layout = Layout.bottom_right});
-
-  @override
-  _LookWidgetState createState() => _LookWidgetState(items);
-}
-
-class _LookWidgetState extends State<LookWidget> {
-  final List<ItemWidget> items;
-  final Layout layout;
-
-  _LookWidgetState(this.items, {this.layout = Layout.bottom_right});
-
-  Expanded expandedColumn(Expanded first, Expanded last) => Expanded(
-        child: Column(
-          children: <Widget>[first, last],
-        ),
-      );
+  LookWidget(this.itemWidgets, {this.layout = Layout.bottom_right});
 
   @override
   Widget build(BuildContext context) {
-    final List<Expanded> looks = items
+    final List<Expanded> looks = itemWidgets
         .map(
           (item) => Expanded(
             child: item,
@@ -113,7 +97,13 @@ class _LookWidgetState extends State<LookWidget> {
           ],
         );
       default:
-        return Text('No items');
+        return Text('Loading items...');
     }
   }
+
+  Expanded expandedColumn(Expanded first, Expanded last) => Expanded(
+        child: Column(
+          children: <Widget>[first, last],
+        ),
+      );
 }
