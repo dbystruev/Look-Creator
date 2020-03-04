@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:look_creator/controllers/api.dart';
 import 'package:look_creator/models/item.dart';
 import 'package:look_creator/models/layout.dart';
 import 'package:look_creator/widgets/item_widget.dart';
@@ -33,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final Api offersApi = Api();
   final List<ItemWidget> items = [
     ItemWidget(
       Item(pictures: [
@@ -64,6 +66,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    offersApi
+        .getItem('AR037EWFXUV5')
+        .then(
+          (Item item) => print('DEBUG lib/main.dart line 72: $item'),
+        )
+        .catchError(
+          (error) => print('ERROR lib/main.dart line 75: $error'),
+        );
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
