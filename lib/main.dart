@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'AN225EGGURF0',
     'AT006EBCSCT1',
     'AD002BUEEDG3',
-    'AD002ABFKOD0'
+    'AD002ABFKOD0',
   ];
   List<Item> items = [];
   List<ItemWidget> itemWidgets = [];

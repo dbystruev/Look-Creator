@@ -4,15 +4,29 @@
 //  Created by Denis Bystruev on 03/03/2020.
 //
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:look_creator/models/layout.dart';
 import 'package:look_creator/widgets/item_widget.dart';
 
-class LookWidget extends StatelessWidget {
+class LookWidget extends StatefulWidget {
   final List<ItemWidget> itemWidgets;
   final Layout layout;
 
   LookWidget(this.itemWidgets, {this.layout = Layout.bottom_right});
+
+  @override
+  _LookWidgetState createState() => _LookWidgetState(itemWidgets);
+}
+
+class _LookWidgetState extends State<LookWidget> {
+  int counter = 0;
+  List<ItemWidget> itemWidgets;
+  final Layout layout;
+  Timer timer;
+
+  _LookWidgetState(this.itemWidgets, {this.layout = Layout.bottom_right});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +37,6 @@ class LookWidget extends StatelessWidget {
           ),
         )
         .toList();
-
     switch (looks.length) {
       case 1:
         return looks.first.child;
@@ -97,8 +110,22 @@ class LookWidget extends StatelessWidget {
           ],
         );
       default:
-        return Text('Loading items...');
+        return Text(
+          counter < 2 ? 'Loading items...' : 'Loading for $counter seconds...',
+        );
     }
+  }
+
+  @override
+  void didUpdateWidget(LookWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    itemWidgets = widget.itemWidgets;
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   Expanded expandedColumn(Expanded first, Expanded last) => Expanded(
@@ -106,4 +133,16 @@ class LookWidget extends StatelessWidget {
           children: <Widget>[first, last],
         ),
       );
+
+  @override
+  initState() {
+    super.initState();
+    timer = Timer.periodic(
+      Duration(seconds: 1),
+      (Timer timer) {
+        setState(() => ++counter);
+        if (0 < itemWidgets.length) timer.cancel();
+      },
+    );
+  }
 }
